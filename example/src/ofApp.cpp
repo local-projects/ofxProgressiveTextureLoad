@@ -2,9 +2,9 @@
 
 #include "ofxTimeMeasurements.h"
 
-string imgName = "img.png";
+string imgName = "huge_a.png";
 
-void ofApp::setup(){
+void ofApp::setup() {
 
 	ofBackground(33);
 	ofEnableAlphaBlending();
@@ -25,8 +25,12 @@ void ofApp::setup(){
 	int resizeQuality = CV_INTER_CUBIC; //when creating mipmaps, what resizing quality should we use when downsampling the image?
 										//valid options: CV_INTER_LINEAR, CV_INTER_NN, CV_INTER_CUBIC, CV_INTER_AREA
 
-	//setup the loader by giving it a texture to load into, a resizing quality preference, and wether you want mipmaps created or not
-	progressiveTextureLoader.setup(myTex, resizeQuality, useARB);
+	// Setup the loader by giving it a texture to load into, a resizing quality preference, 
+	// whether you want mipmaps created or not, (optional) dimensions to resize the texture
+	// to, and (optional) interpolation method for the texture resizing. Note: If you don't
+	// the texture to be resized -- that is, you want it loaded at the same size it exists
+	// at in file -- then pass {-1, -1} for the resizeToDimensions.
+	progressiveTextureLoader.setup(myTex, resizeQuality, useARB, glm::ivec2(-1, -1), ofInterpolationMethod::OF_INTERPOLATE_BICUBIC);
 	progressiveTextureLoader.setVerbose(true);
 
 	//these 2 settings control how long it takes for the tex to load

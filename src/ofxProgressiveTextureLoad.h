@@ -86,7 +86,10 @@ public:
 
 	//if using ARB Textures, no resize is necessary!
 	//you cant create mipmaps if using ARB!
-	void setup(ofTexture* tex, int resizeQuality = CV_INTER_CUBIC, bool useARB = false);
+	// Provide desired dimensions if you want the texture to be different dimensions
+	// than the image file it will be loaded from. Dimensions of (-1,-1) keep the original dimensions.
+	// The method defines how the target loaded image will be resized from the disk image.
+	void setup(ofTexture* tex, int resizeQuality = CV_INTER_CUBIC, bool useARB = false, glm::ivec2 resizeToDimensions = glm::ivec2(-1,-1), ofInterpolationMethod resizeToMethod = ofInterpolationMethod::OF_INTERPOLATE_BICUBIC);
 	void loadTexture(std::string path, bool withMipMaps);
 	int getID(){return ID;}
 
@@ -205,6 +208,9 @@ private:
 	//float				cancelAsapDelay;
 
 	bool 				isSetup;
+
+	glm::ivec2			resizeToDimensions;
+	ofInterpolationMethod	resizeToMethod;
 
 
 	std::map<int, ofPixels*>	mipMapLevelPixels;

@@ -33,6 +33,8 @@ ofxProgressiveTextureLoad::ofxProgressiveTextureLoad(){
 	cancelAsap = false;
 	readyForDeletion = false;
 	useOnlyOnce = false;
+	resizeToDimensions = glm::ivec2(-1, -1);
+	resizeToMethod = ofInterpolationMethod::OF_INTERPOLATE_BICUBIC;
 }
 
 ofxProgressiveTextureLoad::~ofxProgressiveTextureLoad(){
@@ -48,12 +50,15 @@ ofxProgressiveTextureLoad::~ofxProgressiveTextureLoad(){
 	//cout << "end delete ofxProgressiveTextureLoad " << this << endl;
 }
 
-void ofxProgressiveTextureLoad::setup(ofTexture* tex, int resizeQuality_, bool useARB_){
+void ofxProgressiveTextureLoad::setup(ofTexture* tex, int resizeQuality_, bool useARB_, glm::ivec2 resizeToDimensions_, ofInterpolationMethod resizeToMethod_){
 
 	resizeQuality = resizeQuality_;
 	texture = tex;
 	isSetup = true;
 	useARB = useARB_;
+	// Set the desired texture dimensions and check for validity of the dimensions
+	resizeToDimensions = (resizeToDimensions_[0] <= 0 || resizeToDimensions_[1] <= 0) ? glm::ivec2(-1, -1) : resizeToDimensions_;
+	resizeToMethod = resizeToMethod_;
 }
 
 void ofxProgressiveTextureLoad::loadTexture(string path, bool withMipMaps){
@@ -131,6 +136,16 @@ void ofxProgressiveTextureLoad::threadedFunction(){
 						#ifdef OFX_PROG_TEX_LOADER_MEAURE_TIMINGS
 						TS_STOP_NIF("loadPix " + ofToString(ID));
 						#endif
+						// Resize the pixels if necessary
+						if (resizeToDimensions[0] > 0 && resizeToDimensions[1] > 0) {
+							bool resizeOk = imagePixels.resize(resizeToDimensions[0], resizeToDimensions[1], resizeToMethod);
+							if (!resizeOk) {
+								ofLogError("ofxProgressiveTextureLoad") << "img resizing failed! " << imagePath;
+								setState(LOADING_FAILED);
+								return;
+							}
+						}
+						// Set the pixel type
 						switch (imagePixels.getImageType()) {
 							case OF_IMAGE_COLOR:
 								config.glFormat = GL_RGB;

@@ -31,7 +31,9 @@ ProgressiveTextureLoadQueue::loadTexture(string path,
 										 bool createMipMaps,
 										 bool ARB,
 										 int resizeQuality,
-										 bool highPriority){
+										 bool highPriority,
+										 glm::ivec2 resizeToDimensions,
+										 ofInterpolationMethod resizeToMethod){
 
 	LoadRequest r;
 	r.path = path;
@@ -42,7 +44,7 @@ ProgressiveTextureLoadQueue::loadTexture(string path,
 	r.loader->setScanlinesPerLoop(numLinesPerLoop);
 	r.loader->setTargetTimePerFrame(maxTimeTakenPerFrame);
 	r.loader->setTexLodBias(texLodBias);
-	r.loader->setup(tex, resizeQuality, ARB);
+	r.loader->setup(tex, resizeQuality, ARB, resizeToDimensions, resizeToMethod);
 	r.ID = ids;
 	ids++;
 

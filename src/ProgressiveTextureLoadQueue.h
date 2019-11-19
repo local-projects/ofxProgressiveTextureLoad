@@ -34,7 +34,9 @@ public:
 										   bool createMipMaps,
 										   bool ARB,
 										   int resizeQuality,
-										   bool highPriority);
+										   bool highPriority,
+										   glm::ivec2 resizeToDimensions = glm::ivec2(-1,-1),
+										   ofInterpolationMethod resizeToMethod = ofInterpolationMethod::OF_INTERPOLATE_BICUBIC);
 
 
 	void draw(int x, int y);

@@ -40,8 +40,9 @@ void ofApp::setup(){
 															true,				//do you want mipmaps created for this texture?
 															true,               //USE ARB? meaning GL_TEXTURE_RECTANGLE_ARB or GL_TEXTURE_2D - creating mimMaps requires GL_TEXTURE_2D!
 															CV_INTER_AREA,		//opencv resize quality - to create mipmaps we need to downsample the original image; what resizing quality should we choose in doing so?
-															false				//high priority - puts request at beginning of the queue instead of at the end of it
-															);
+															false,				//high priority - puts request at beginning of the queue instead of at the end of it
+															glm::ivec2(-1, -1), //Do you want to resize the texture? If so, pass dimensions. If not, use {-1,-1}.
+															ofInterpolationMethod::OF_INTERPOLATE_BICUBIC); // What method do you want the texture to be resized with?
 		ofAddListener(loader->textureReady, this, &ofApp::textureReady);
 		ofAddListener(loader->textureDrawable, this, &ofApp::textureDrawable);
 	}
